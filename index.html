@@ -6,26 +6,15 @@
   <meta name="theme-color" content="#111111" />
   <meta property="og:title" content="Thomas Fiebig – Edelmetallfachberater" />
   <meta property="og:description" content="Digitale Visitenkarte von Thomas Fiebig, Edelmetallfachberater" />
-  <meta property="og:url" content="https://fiebig-edelmetallfachberater.com" />
   <title>Thomas Fiebig – Edelmetallfachberater</title>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --gold-1: #c8a84b;
-      --gold-2: #f0d060;
-      --gold-3: #e8c84a;
-      --gold-4: #b8942a;
-      --gold-5: #f5e070;
-      --dark-bg: #111111;
-      --card-dark: #1c1c1c;
-    }
-
     body {
       min-height: 100vh;
       min-height: 100dvh;
-      background: var(--dark-bg);
+      background: #111;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -36,7 +25,6 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* subtle background shimmer */
     body::before {
       content: '';
       position: fixed;
@@ -57,40 +45,13 @@
       text-transform: uppercase;
       font-family: 'Cormorant Garamond', serif;
       white-space: nowrap;
-      animation: fadeHint 3s ease 1.5s both;
-    }
-
-    @keyframes fadeHint {
-      from { opacity: 0; transform: translateX(-50%) translateY(6px); }
-      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
     }
 
     .scene {
       width: min(320px, 86vw);
       height: min(570px, calc(86vw * 1.78));
-      perspective: 1400px;
-      cursor: pointer;
-      animation: cardEntry 0.8s cubic-bezier(0.2,0.8,0.3,1) both;
-    }
-
-    @keyframes cardEntry {
-      from { opacity: 0; transform: scale(0.92) translateY(20px); }
-      to   { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    .flipper {
-      width: 100%;
-      height: 100%;
       position: relative;
-      transform-style: preserve-3d;
-      -webkit-transform-style: preserve-3d;
-      transition: transform 0.78s cubic-bezier(0.4, 0.15, 0.2, 1);
-      -webkit-transition: -webkit-transform 0.78s cubic-bezier(0.4, 0.15, 0.2, 1);
-    }
-
-    .flipper.flipped {
-      transform: rotateY(180deg);
-      -webkit-transform: rotateY(180deg);
+      cursor: pointer;
     }
 
     .face {
@@ -98,27 +59,44 @@
       inset: 0;
       border-radius: 18px;
       overflow: hidden;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      -moz-backface-visibility: hidden;
-      box-shadow:
-        0 30px 70px rgba(0,0,0,0.75),
-        0 0 0 1px rgba(200,168,75,0.22),
-        inset 0 1px 0 rgba(255,255,255,0.08);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.75), 0 0 0 1px rgba(200,168,75,0.22);
+      transition: opacity 0.2s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
     }
 
-    /* ─── FRONT ─── */
+    .front {
+      opacity: 1;
+      transform: scale(1);
+      z-index: 2;
+      pointer-events: auto;
+    }
+
+    .back {
+      opacity: 0;
+      transform: scale(0.93);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .scene.flipped .front {
+      opacity: 0;
+      transform: scale(0.93);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .scene.flipped .back {
+      opacity: 1;
+      transform: scale(1);
+      z-index: 2;
+      pointer-events: auto;
+    }
+
+    /* ─── VORDERSEITE ─── */
     .front {
       background: linear-gradient(108deg,
-        #b8902a 0%,
-        #d4aa40 12%,
-        #f0d868 26%,
-        #f5e888 36%,
-        #e8d060 48%,
-        #c09030 60%,
-        #d8b848 72%,
-        #f0d060 82%,
-        #c8a030 100%
+        #b8902a 0%, #d4aa40 12%, #f0d868 26%,
+        #f5e888 36%, #e8d060 48%, #c09030 60%,
+        #d8b848 72%, #f0d060 82%, #c8a030 100%
       );
       display: flex;
       flex-direction: column;
@@ -127,17 +105,13 @@
       padding: 44px 32px;
     }
 
-    /* brushed metal lines */
     .front::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: repeating-linear-gradient(
-        90deg,
-        transparent 0px,
-        transparent 3px,
-        rgba(255,255,255,0.045) 3px,
-        rgba(255,255,255,0.045) 5px
+      background: repeating-linear-gradient(90deg,
+        transparent 0px, transparent 3px,
+        rgba(255,255,255,0.045) 3px, rgba(255,255,255,0.045) 5px
       );
       pointer-events: none;
     }
@@ -145,12 +119,9 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent 0px,
-        transparent 8px,
-        rgba(0,0,0,0.025) 8px,
-        rgba(0,0,0,0.025) 9px
+      background: repeating-linear-gradient(0deg,
+        transparent 0px, transparent 8px,
+        rgba(0,0,0,0.025) 8px, rgba(0,0,0,0.025) 9px
       );
       pointer-events: none;
     }
@@ -168,8 +139,7 @@
       color: #1a1208;
       line-height: 1.05;
       margin-bottom: 20px;
-      text-shadow: 1px 2px 4px rgba(255,255,255,0.25), -1px -1px 2px rgba(0,0,0,0.15);
-      letter-spacing: -0.5px;
+      text-shadow: 1px 2px 4px rgba(255,255,255,0.25);
     }
 
     .front-divider {
@@ -185,35 +155,27 @@
       letter-spacing: 5px;
       color: #2a1a08;
       text-transform: uppercase;
-      font-weight: 400;
     }
 
-    /* ─── BACK ─── */
+    /* ─── RÜCKSEITE ─── */
     .back {
-      transform: rotateY(180deg);
-      -webkit-transform: rotateY(180deg);
       background: #0d0d0d;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
       padding: 32px 26px 28px;
-      position: relative;
     }
 
     .back::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at 50% 10%, #1e1b0f 0%, #0d0d0d 60%);
+      background: radial-gradient(ellipse at 50% 10%, #201e14 0%, #0d0d0d 60%);
       pointer-events: none;
-      z-index: 0;
       border-radius: 18px;
     }
 
-    .back-top, .back-mid, .back-bottom { position: relative; z-index: 1; }
-
-    /* gold gradient text utility */
     .gold-text {
       background: linear-gradient(135deg, #c8a84b 0%, #f0d060 30%, #e8c84a 50%, #b8942a 70%, #d4aa40 85%, #f5e070 100%);
       -webkit-background-clip: text;
@@ -221,8 +183,7 @@
       background-clip: text;
     }
 
-    /* TOP: monogram + website */
-    .back-top { text-align: center; }
+    .back-top { text-align: center; position: relative; z-index: 1; }
 
     .monogram {
       font-family: 'Cormorant Garamond', serif;
@@ -241,10 +202,8 @@
       text-decoration: none;
       display: block;
     }
-    .website-link:hover { opacity: 0.75; }
 
-    /* MIDDLE: social + QR */
-    .back-mid { text-align: center; width: 100%; }
+    .back-mid { text-align: center; width: 100%; position: relative; z-index: 1; }
 
     .social-row {
       display: flex;
@@ -259,7 +218,6 @@
       font-size: clamp(11px, 3vw, 13px);
       letter-spacing: 3px;
       text-transform: uppercase;
-      font-weight: 400;
     }
 
     .icon-btn {
@@ -272,11 +230,8 @@
       align-items: center;
       justify-content: center;
       text-decoration: none;
-      transition: background 0.2s, border-color 0.2s;
       flex-shrink: 0;
     }
-    .icon-btn:hover { background: rgba(200,168,75,0.14); border-color: rgba(200,168,75,0.6); }
-    .icon-btn:active { background: rgba(200,168,75,0.22); }
 
     .qr-wrap {
       display: inline-flex;
@@ -296,9 +251,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: box-shadow 0.2s;
     }
-    .qr-wrap:hover .qr-box { box-shadow: 0 8px 30px rgba(200,168,75,0.45); }
 
     .qr-label {
       font-family: 'Cormorant Garamond', serif;
@@ -308,8 +261,7 @@
       text-transform: uppercase;
     }
 
-    /* BOTTOM: divider + phone + email */
-    .back-bottom { text-align: center; width: 100%; }
+    .back-bottom { text-align: center; width: 100%; position: relative; z-index: 1; }
 
     .gold-divider {
       width: 38%;
@@ -329,10 +281,7 @@
       background: rgba(200,168,75,0.05);
       text-decoration: none;
       margin-bottom: 11px;
-      transition: background 0.2s, border-color 0.2s;
     }
-    .phone-btn:hover { background: rgba(200,168,75,0.12); border-color: rgba(200,168,75,0.55); }
-    .phone-btn:active { background: rgba(200,168,75,0.2); }
 
     .phone-label {
       font-family: 'Cormorant Garamond', serif;
@@ -346,210 +295,179 @@
       font-size: clamp(7.5px, 2.1vw, 9.5px);
       letter-spacing: 0.4px;
       text-decoration: none;
-      transition: opacity 0.2s;
     }
-    .email-link:hover { opacity: 0.7; }
   </style>
 </head>
 <body>
 
   <div class="hint">Tippen zum Drehen</div>
 
-  <div class="scene" id="card" onclick="flipCard()">
-    <div class="flipper" id="flipper">
+  <div class="scene" id="card">
 
-      <!-- VORDERSEITE -->
-      <div class="face front">
-        <div class="front-content">
-          <div class="signature">Thomas Fiebig</div>
-          <div class="front-divider"></div>
-          <div class="title-text">Edelmetallfachberater</div>
-        </div>
+    <!-- VORDERSEITE -->
+    <div class="face front" onclick="flipCard()">
+      <div class="front-content">
+        <div class="signature">Thomas Fiebig</div>
+        <div class="front-divider"></div>
+        <div class="title-text">Edelmetallfachberater</div>
+      </div>
+    </div>
+
+    <!-- RÜCKSEITE -->
+    <div class="face back" onclick="flipCard()">
+
+      <div class="back-top">
+        <div class="monogram gold-text">TF</div>
+        <a href="https://fiebig-edelmetallfachberater.com"
+           target="_blank" rel="noopener noreferrer"
+           class="website-link gold-text"
+           onclick="event.stopPropagation()">
+          Fiebig-Edelmetallfachberater.com
+        </a>
       </div>
 
-      <!-- RÜCKSEITE -->
-      <div class="face back">
-
-        <!-- Oben: Monogramm + Website -->
-        <div class="back-top">
-          <div class="monogram gold-text">TF</div>
-          <a href="https://fiebig-edelmetallfachberater.com"
+      <div class="back-mid">
+        <div class="social-row">
+          <a href="https://www.facebook.com/swissgolddepot"
              target="_blank" rel="noopener noreferrer"
-             class="website-link gold-text"
-             onclick="event.stopPropagation()">
-            Fiebig-Edelmetallfachberater.com
-          </a>
-        </div>
-
-        <!-- Mitte: Social + QR -->
-        <div class="back-mid">
-          <div class="social-row">
-            <!-- Facebook -->
-            <a href="https://www.facebook.com/swissgolddepot"
-               target="_blank" rel="noopener noreferrer"
-               class="icon-btn"
-               onclick="event.stopPropagation()"
-               title="Facebook: swissgolddepot">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10.5" stroke="#c8a84b" stroke-width="1.4"/>
-                <path d="M13.5 8.5H15V6.5H13C11.6 6.5 10.5 7.6 10.5 9V10.5H9V12.5H10.5V17.5H12.5V12.5H14L14.5 10.5H12.5V9C12.5 8.72 12.72 8.5 13 8.5H13.5Z" fill="#c8a84b"/>
-              </svg>
-            </a>
-
-            <span class="social-handle gold-text">swissgolddepot</span>
-
-            <!-- Instagram -->
-            <a href="https://www.instagram.com/swissgolddepot"
-               target="_blank" rel="noopener noreferrer"
-               class="icon-btn"
-               onclick="event.stopPropagation()"
-               title="Instagram: swissgolddepot">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="#c8a84b" stroke-width="1.4"/>
-                <circle cx="12" cy="12" r="4.2" stroke="#c8a84b" stroke-width="1.4"/>
-                <circle cx="17.6" cy="6.4" r="1.1" fill="#c8a84b"/>
-              </svg>
-            </a>
-          </div>
-
-          <!-- QR-Code → Website -->
-          <a href="https://fiebig-edelmetallfachberater.com"
-             target="_blank" rel="noopener noreferrer"
-             class="qr-wrap"
-             onclick="event.stopPropagation()"
-             title="Zur Website">
-            <div class="qr-box">
-              <!-- QR-Code SVG (dekorativ, Farben abgestimmt) -->
-              <svg viewBox="0 0 37 37" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                <!-- Finder oben links -->
-                <rect x="1" y="1" width="9" height="9" fill="#1a1208" rx="1.2"/>
-                <rect x="2.2" y="2.2" width="6.6" height="6.6" fill="#f5e888" rx="0.6"/>
-                <rect x="3.4" y="3.4" width="4.2" height="4.2" fill="#1a1208" rx="0.5"/>
-                <!-- Finder oben rechts -->
-                <rect x="27" y="1" width="9" height="9" fill="#1a1208" rx="1.2"/>
-                <rect x="28.2" y="2.2" width="6.6" height="6.6" fill="#f5e888" rx="0.6"/>
-                <rect x="29.4" y="3.4" width="4.2" height="4.2" fill="#1a1208" rx="0.5"/>
-                <!-- Finder unten links -->
-                <rect x="1" y="27" width="9" height="9" fill="#1a1208" rx="1.2"/>
-                <rect x="2.2" y="28.2" width="6.6" height="6.6" fill="#f5e888" rx="0.6"/>
-                <rect x="3.4" y="29.4" width="4.2" height="4.2" fill="#1a1208" rx="0.5"/>
-                <!-- Datenpunkte -->
-                <rect x="12" y="1" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="15" y="1" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="18" y="1" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="21" y="1" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="24" y="1" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="12" y="4" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="18" y="4" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="24" y="4" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="13" y="7" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="16" y="7" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="20" y="7" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="23" y="7" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="1"  y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="4"  y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="7"  y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="11" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="14" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="17" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="20" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="23" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="26" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="29" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="32" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="35" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="2"  y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="6"  y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="10" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="14" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="18" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="22" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="26" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="30" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="34" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="1"  y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="5"  y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="9"  y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="13" y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="17" y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="21" y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="25" y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="29" y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="33" y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="3"  y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="7"  y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="11" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="15" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="19" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="23" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="27" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="31" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="35" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="12" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="15" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="19" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="23" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="27" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="31" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="35" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="12" y="30" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="16" y="30" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="20" y="30" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="24" y="30" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="28" y="30" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="32" y="30" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="13" y="33" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="17" y="33" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="21" y="33" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="25" y="33" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="29" y="33" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="33" y="33" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="12" y="36" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="15" y="36" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="19" y="36" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="23" y="36" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="27" y="36" width="2" height="2" fill="#1a1208" rx="0.3"/>
-                <rect x="31" y="36" width="2" height="2" fill="#1a1208" rx="0.3"/>
-              </svg>
-            </div>
-            <span class="qr-label gold-text">Zur Website scannen</span>
-          </a>
-        </div>
-
-        <!-- Unten: Telefon + E-Mail -->
-        <div class="back-bottom">
-          <div class="gold-divider"></div>
-
-          <a href="tel:+4916096432246"
-             class="phone-btn"
-             onclick="event.stopPropagation()"
-             title="Anrufen">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.61 21 3 13.39 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.26.2 2.47.57 3.58.11.35.03.74-.24 1.02L6.6 10.8z" fill="#c8a84b"/>
+             class="icon-btn" onclick="event.stopPropagation()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10.5" stroke="#c8a84b" stroke-width="1.4"/>
+              <path d="M13.5 8.5H15V6.5H13C11.6 6.5 10.5 7.6 10.5 9V10.5H9V12.5H10.5V17.5H12.5V12.5H14L14.5 10.5H12.5V9C12.5 8.72 12.72 8.5 13 8.5H13.5Z" fill="#c8a84b"/>
             </svg>
-            <span class="phone-label gold-text">Jetzt anrufen</span>
           </a>
 
-          <a href="mailto:beratung@fiebig-edelmetallfachberater.com"
-             class="email-link gold-text"
-             onclick="event.stopPropagation()">
-            beratung@fiebig-edelmetallfachberater.com
+          <span class="social-handle gold-text">swissgolddepot</span>
+
+          <a href="https://www.instagram.com/swissgolddepot"
+             target="_blank" rel="noopener noreferrer"
+             class="icon-btn" onclick="event.stopPropagation()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="#c8a84b" stroke-width="1.4"/>
+              <circle cx="12" cy="12" r="4.2" stroke="#c8a84b" stroke-width="1.4"/>
+              <circle cx="17.6" cy="6.4" r="1.1" fill="#c8a84b"/>
+            </svg>
           </a>
         </div>
 
-      </div><!-- /back -->
-    </div><!-- /flipper -->
-  </div><!-- /scene -->
+        <a href="https://fiebig-edelmetallfachberater.com"
+           target="_blank" rel="noopener noreferrer"
+           class="qr-wrap" onclick="event.stopPropagation()">
+          <div class="qr-box">
+            <svg viewBox="0 0 37 37" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1" y="1" width="9" height="9" fill="#1a1208" rx="1.2"/>
+              <rect x="2.2" y="2.2" width="6.6" height="6.6" fill="#f5e888" rx="0.6"/>
+              <rect x="3.4" y="3.4" width="4.2" height="4.2" fill="#1a1208" rx="0.5"/>
+              <rect x="27" y="1" width="9" height="9" fill="#1a1208" rx="1.2"/>
+              <rect x="28.2" y="2.2" width="6.6" height="6.6" fill="#f5e888" rx="0.6"/>
+              <rect x="29.4" y="3.4" width="4.2" height="4.2" fill="#1a1208" rx="0.5"/>
+              <rect x="1" y="27" width="9" height="9" fill="#1a1208" rx="1.2"/>
+              <rect x="2.2" y="28.2" width="6.6" height="6.6" fill="#f5e888" rx="0.6"/>
+              <rect x="3.4" y="29.4" width="4.2" height="4.2" fill="#1a1208" rx="0.5"/>
+              <rect x="12" y="1" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="15" y="1" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="18" y="1" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="21" y="1" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="24" y="1" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="12" y="4" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="18" y="4" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="24" y="4" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="13" y="7" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="16" y="7" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="20" y="7" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="23" y="7" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="1"  y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="4"  y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="7"  y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="11" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="14" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="17" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="20" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="23" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="26" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="29" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="32" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="35" y="12" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="2"  y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="6"  y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="10" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="14" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="18" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="22" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="26" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="30" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="34" y="15" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="1"  y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="5"  y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="9"  y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="13" y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="17" y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="21" y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="25" y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="29" y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="33" y="18" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="3"  y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="7"  y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="11" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="15" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="19" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="23" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="27" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="31" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="35" y="21" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="12" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="15" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="19" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="23" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="27" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="31" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="35" y="27" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="12" y="30" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="16" y="30" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="20" y="30" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="24" y="30" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="28" y="30" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="32" y="30" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="13" y="33" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="17" y="33" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="21" y="33" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="25" y="33" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="29" y="33" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="33" y="33" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="12" y="36" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="15" y="36" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="19" y="36" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="23" y="36" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="27" y="36" width="2" height="2" fill="#1a1208" rx="0.3"/>
+              <rect x="31" y="36" width="2" height="2" fill="#1a1208" rx="0.3"/>
+            </svg>
+          </div>
+          <span class="qr-label gold-text">Zur Website scannen</span>
+        </a>
+      </div>
+
+      <div class="back-bottom">
+        <div class="gold-divider"></div>
+        <a href="tel:+4916096432246"
+           class="phone-btn" onclick="event.stopPropagation()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.61 21 3 13.39 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.26.2 2.47.57 3.58.11.35.03.74-.24 1.02L6.6 10.8z" fill="#c8a84b"/>
+          </svg>
+          <span class="phone-label gold-text">Jetzt anrufen</span>
+        </a>
+        <a href="mailto:beratung@fiebig-edelmetallfachberater.com"
+           class="email-link gold-text" onclick="event.stopPropagation()">
+          beratung@fiebig-edelmetallfachberater.com
+        </a>
+      </div>
+
+    </div>
+  </div>
 
   <script>
     function flipCard() {
-      document.getElementById('flipper').classList.toggle('flipped');
+      document.getElementById('card').classList.toggle('flipped');
     }
-    // Touch support
-    document.getElementById('card').addEventListener('touchend', function(e) {
-      e.preventDefault();
-      flipCard();
-    }, { passive: false });
   </script>
 </body>
 </html>
