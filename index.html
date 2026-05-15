@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#111111" />
+  <meta property="og:title" content="Thomas Fiebig – Edelmetallfachberater" />
+  <meta property="og:description" content="Digitale Visitenkarte" />
+  <meta property="og:image" content="https://thomasfiebig.github.io/DigiVisit/preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://thomasfiebig.github.io/DigiVisit/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://thomasfiebig.github.io/DigiVisit/preview.png" />
+  <title>Thomas Fiebig – Edelmetallfachberater</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh; min-height: 100dvh;
+      background: #111;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(200,168,75,0.07) 0%, transparent 55%),
+                  radial-gradient(ellipse at 70% 80%, rgba(200,168,75,0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .scene {
+      width: min(320px, 86vw);
+      height: min(590px, calc(86vw * 1.84));
+      position: relative;
+    }
+
+    .face {
+      position: absolute; inset: 0; border-radius: 18px; overflow: hidden;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.75), 0 0 0 1px rgba(200,168,75,0.22);
+      transition: opacity 0.25s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      display: flex; flex-direction: column;
+    }
+
+    .front { opacity: 1; transform: scale(1); z-index: 2; }
+    .back  { opacity: 0; transform: scale(0.93); z-index: 1; pointer-events: none; }
+    .scene.flipped .front { opacity: 0; transform: scale(0.93); z-index: 1; pointer-events: none; }
+    .scene.flipped .back  { opacity: 1; transform: scale(1); z-index: 2; pointer-events: auto; }
+
+    /* GOLD GRADIENT – both sides */
+    .gold-bg {
+      background: linear-gradient(108deg,
+        #b8902a 0%, #d4aa40 12%, #f0d868 26%, #f5e888 36%,
+        #e8d060 48%, #c09030 60%, #d8b848 72%, #f0d060 82%, #c8a030 100%);
+    }
+    .gold-bg::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(255,255,255,0.045) 3px, rgba(255,255,255,0.045) 5px);
+      pointer-events: none;
+    }
+    .gold-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent 0px, transparent 8px, rgba(0,0,0,0.025) 8px, rgba(0,0,0,0.025) 9px);
+      pointer-events: none;
+    }
+
+    /* FLIP BAR */
+    .flip-bar {
+      width: 100%;
+      padding: 11px 0;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      cursor: pointer; touch-action: manipulation;
+      -webkit-tap-highlight-color: rgba(26,18,8,0.1);
+      border: none; outline: none; background: rgba(26,18,8,0.06);
+      border-top: 1px solid rgba(26,18,8,0.2);
+      flex-shrink: 0; z-index: 20; position: relative;
+    }
+    .flip-bar-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(26,18,8,0.6);
+    }
+
+    /* FRONT */
+    .front { }
+    .front-main {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 44px 32px 20px; position: relative; z-index: 1; pointer-events: none;
+    }
+    .front-content { text-align: center; }
+    .signature {
+      font-family: 'Dancing Script', cursive; font-weight: 700;
+      font-size: clamp(40px, 12vw, 54px); color: #1a1208;
+      line-height: 1.05; margin-bottom: 20px;
+      text-shadow: 1px 2px 4px rgba(255,255,255,0.25);
+    }
+    .front-divider {
+      width: 55%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(26,18,8,0.4), transparent);
+      margin: 0 auto 18px;
+    }
+    .title-text {
+      font-size: clamp(10px, 2.8vw, 12px);
+      letter-spacing: 5px; color: #2a1a08; text-transform: uppercase; font-weight: 500;
+    }
+
+    /* BACK */
+    .back-main {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: space-between;
+      padding: 28px 24px 16px; position: relative; z-index: 1; overflow: hidden;
+    }
+
+    .back-top { text-align: center; width: 100%; }
+    .monogram {
+      font-weight: 400;
+      font-size: clamp(46px, 13vw, 58px); letter-spacing: 8px; line-height: 1;
+      color: #0f0a02; margin-bottom: 7px;
+    }
+
+    a {
+      display: block; text-decoration: none;
+      touch-action: manipulation; cursor: pointer;
+      -webkit-tap-highlight-color: rgba(26,18,8,0.12);
+      position: relative; z-index: 10;
+    }
+
+    .website-link {
+      font-size: clamp(8.5px, 2.4vw, 10px); font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: #0f0a02; margin-bottom: 3px; padding: 4px 0;
+    }
+    .tap-hint {
+      font-size: 8px; font-weight: 600; letter-spacing: 2px;
+      color: rgba(26,18,8,0.55); text-transform: uppercase;
+      display: block; pointer-events: none;
+    }
+
+    .back-mid { text-align: center; width: 100%; }
+
+    .social-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 18px; margin-bottom: 5px;
+    }
+
+    .icon-btn {
+      width: 44px; height: 44px; border-radius: 10px;
+      border: 1.5px solid rgba(26,18,8,0.35); background: rgba(26,18,8,0.07);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; padding: 9px;
+    }
+
+    .social-label {
+      font-size: 8px; font-weight: 600; letter-spacing: 2px;
+      color: rgba(26,18,8,0.55); text-transform: uppercase;
+      display: block; margin-bottom: 12px; pointer-events: none;
+    }
+
+    .qr-wrap {
+      display: inline-flex; flex-direction: column;
+      align-items: center; gap: 5px; padding: 4px;
+    }
+
+    .qr-box {
+      width: clamp(86px, 23vw, 100px); height: clamp(86px, 23vw, 100px);
+      background: #1a1208; border-radius: 9px; padding: 7px;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+
+    .back-bottom { text-align: center; width: 100%; }
+
+    .dark-divider {
+      width: 38%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(26,18,8,0.3), transparent);
+      margin: 0 auto 12px; pointer-events: none;
+    }
+
+    .phone-btn {
+      display: flex; align-items: center; justify-content: center;
+      gap: 9px; padding: 10px 18px; border-radius: 40px;
+      border: 1.5px solid rgba(26,18,8,0.3); background: rgba(26,18,8,0.07);
+      margin-bottom: 4px;
+    }
+    .phone-label {
+      font-size: clamp(9px, 2.5vw, 11px); font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: #0f0a02; pointer-events: none;
+    }
+
+    .email-link {
+      font-size: clamp(7.5px, 2vw, 9px); font-weight: 600;
+      letter-spacing: 0.4px; color: rgba(15,10,2,0.8);
+      padding: 4px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scene" id="card">
+
+    <!-- VORDERSEITE -->
+    <div class="face gold-bg front">
+      <div class="front-main">
+        <div class="front-content">
+          <div class="signature">Thomas Fiebig</div>
+          <div class="front-divider"></div>
+          <div class="title-text">Edelmetallfachberater</div>
+        </div>
+      </div>
+      <button class="flip-bar" onclick="flipCard()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+          <path d="M4 12C4 7.58 7.58 4 12 4C14.35 4 16.48 4.99 18 6.62V4h2v6h-6V8h3.18C16.07 6.76 14.13 6 12 6C8.69 6 6 8.69 6 12H4Z" fill="rgba(26,18,8,0.55)"/>
+          <path d="M20 12C20 16.42 16.42 20 12 20C9.65 20 7.52 19.01 6 17.38V20H4v-6h6v2H6.82C7.93 17.24 9.87 18 12 18C15.31 18 18 15.31 18 12H20Z" fill="rgba(26,18,8,0.55)"/>
+        </svg>
+        <span class="flip-bar-text">Karte drehen</span>
+      </button>
+    </div>
+
+    <!-- RÜCKSEITE -->
+    <div class="face gold-bg back">
+      <div class="back-main">
+
+        <div class="back-top">
+          <div class="monogram">TF</div>
+          <a href="https://fiebig-edelmetallfachberater.com"
+             target="_blank" rel="noopener noreferrer"
+             class="website-link">
+            Fiebig-Edelmetallfachberater.com
+          </a>
+          <span class="tap-hint">Antippen zum Öffnen</span>
+        </div>
+
+        <div class="back-mid">
+          <div class="social-row">
+            <a href="https://www.facebook.com/profile.php?id=61584058441422"
+               target="_blank" rel="noopener noreferrer"
+               class="icon-btn">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10.5" stroke="#0f0a02" stroke-width="1.6"/>
+                <path d="M13.5 8.5H15V6.5H13C11.6 6.5 10.5 7.6 10.5 9V10.5H9V12.5H10.5V17.5H12.5V12.5H14L14.5 10.5H12.5V9C12.5 8.72 12.72 8.5 13 8.5H13.5Z" fill="#0f0a02"/>
+              </svg>
+            </a>
+            <a href="https://www.instagram.com/fiebig_edelmetallfachberater/"
+               target="_blank" rel="noopener noreferrer"
+               class="icon-btn">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="#0f0a02" stroke-width="1.6"/>
+                <circle cx="12" cy="12" r="4.2" stroke="#0f0a02" stroke-width="1.6"/>
+                <circle cx="17.6" cy="6.4" r="1.3" fill="#0f0a02"/>
+              </svg>
+            </a>
+          </div>
+          <span class="social-label">Antippen zum Öffnen</span>
+
+          <a href="https://fiebig-edelmetallfachberater.com"
+             target="_blank" rel="noopener noreferrer"
+             class="qr-wrap">
+            <div class="qr-box">
+              <svg viewBox="0 0 37 37" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <rect x="1" y="1" width="9" height="9" fill="#f5e888" rx="1.2"/>
+                <rect x="2.2" y="2.2" width="6.6" height="6.6" fill="#1a1208" rx="0.6"/>
+                <rect x="3.4" y="3.4" width="4.2" height="4.2" fill="#f5e888" rx="0.5"/>
+                <rect x="27" y="1" width="9" height="9" fill="#f5e888" rx="1.2"/>
+                <rect x="28.2" y="2.2" width="6.6" height="6.6" fill="#1a1208" rx="0.6"/>
+                <rect x="29.4" y="3.4" width="4.2" height="4.2" fill="#f5e888" rx="0.5"/>
+                <rect x="1" y="27" width="9" height="9" fill="#f5e888" rx="1.2"/>
+                <rect x="2.2" y="28.2" width="6.6" height="6.6" fill="#1a1208" rx="0.6"/>
+                <rect x="3.4" y="29.4" width="4.2" height="4.2" fill="#f5e888" rx="0.5"/>
+                <rect x="12" y="1" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="15" y="1" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="18" y="1" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="21" y="1" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="24" y="1" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="12" y="4" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="18" y="4" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="24" y="4" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="13" y="7" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="16" y="7" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="20" y="7" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="23" y="7" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="1" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="4" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="7" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="11" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="14" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="17" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="20" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="23" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="26" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="29" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="32" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="35" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="2" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="6" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="10" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="14" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="18" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="22" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="26" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="30" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="34" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="1" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="5" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="9" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="13" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="17" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="21" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="25" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="29" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="33" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="3" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="7" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="11" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="15" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="19" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="23" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="27" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="31" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="35" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="12" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="15" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="19" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="23" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="27" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="31" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="35" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="12" y="30" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="16" y="30" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="20" y="30" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="24" y="30" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="28" y="30" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="32" y="30" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="13" y="33" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="17" y="33" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="21" y="33" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="25" y="33" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="29" y="33" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="33" y="33" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="12" y="36" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="15" y="36" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="19" y="36" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="23" y="36" width="2" height="2" fill="#f5e888" rx="0.3"/>
+                <rect x="27" y="36" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="31" y="36" width="2" height="2" fill="#f5e888" rx="0.3"/>
+              </svg>
+            </div>
+            <span class="tap-hint">Antippen zum Öffnen</span>
+          </a>
+        </div>
+
+        <div class="back-bottom">
+          <div class="dark-divider"></div>
+          <a href="tel:+4916096432246" class="phone-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="pointer-events:none;flex-shrink:0">
+              <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.61 21 3 13.39 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.26.2 2.47.57 3.58.11.35.03.74-.24 1.02L6.6 10.8z" fill="#0f0a02"/>
+            </svg>
+            <span class="phone-label">Anrufen</span>
+          </a>
+          <span class="tap-hint" style="margin-bottom:8px">Antippen zum Anrufen</span>
+          <a href="mailto:beratung@fiebig-edelmetallfachberater.com" class="email-link">
+            beratung@fiebig-edelmetallfachberater.com
+          </a>
+        </div>
+
+      </div>
+
+      <button class="flip-bar" onclick="flipCard()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+          <path d="M4 12C4 7.58 7.58 4 12 4C14.35 4 16.48 4.99 18 6.62V4h2v6h-6V8h3.18C16.07 6.76 14.13 6 12 6C8.69 6 6 8.69 6 12H4Z" fill="rgba(26,18,8,0.55)"/>
+          <path d="M20 12C20 16.42 16.42 20 12 20C9.65 20 7.52 19.01 6 17.38V20H4v-6h6v2H6.82C7.93 17.24 9.87 18 12 18C15.31 18 18 15.31 18 12H20Z" fill="rgba(26,18,8,0.55)"/>
+        </svg>
+        <span class="flip-bar-text">Zurück drehen</span>
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    function flipCard() {
+      document.getElementById('card').classList.toggle('flipped');
+    }
+  </script>
+</body>
+</html>
