@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="theme-color" content="#111111" />
+<meta property="og:title" content="Thomas Fiebig – Edelmetallfachberater" />
+<meta property="og:description" content="Digitale Visitenkarte" />
+<meta property="og:image" content="https://thomasfiebig.github.io/DigiVisit/preview.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://thomasfiebig.github.io/DigiVisit/" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://thomasfiebig.github.io/DigiVisit/preview.png" />
+<title>Thomas Fiebig – Edelmetallfachberater</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh; min-height: 100dvh;
+  background: #111;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+.scene {
+  width: min(320px, 86vw);
+  height: min(590px, calc(86vw * 1.84));
+  position: relative;
+}
+.face {
+  position: absolute; inset: 0; border-radius: 18px; overflow: hidden;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.75), 0 0 0 1px rgba(200,168,75,0.3);
+  transition: opacity 0.25s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+  background: linear-gradient(108deg,
+    #b8902a 0%, #d4aa40 12%, #f0d868 26%, #f5e888 36%,
+    #e8d060 48%, #c09030 60%, #d8b848 72%, #f0d060 82%, #c8a030 100%);
+}
+.face::before {
+  content: ''; position: absolute; inset: 0; border-radius: 18px;
+  background: repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(255,255,255,0.04) 3px, rgba(255,255,255,0.04) 5px);
+  pointer-events: none; z-index: 0;
+}
+.front { opacity: 1; transform: scale(1); z-index: 2; }
+.back  { opacity: 0; transform: scale(0.93); z-index: 1; pointer-events: none; }
+.scene.flipped .front { opacity: 0; transform: scale(0.93); z-index: 1; pointer-events: none; }
+.scene.flipped .back  { opacity: 1; transform: scale(1); z-index: 2; pointer-events: auto; }
+
+/* FLIP BAR */
+.flip-bar {
+  width: 100%; padding: 11px 0;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  cursor: pointer; touch-action: manipulation;
+  border: none; outline: none;
+  background: rgba(26,18,8,0.08);
+  border-top: 1px solid rgba(26,18,8,0.2);
+  flex-shrink: 0; z-index: 20; position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+.flip-bar span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(15,10,2,0.55);
+}
+
+/* FRONT */
+.front-main {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 44px 32px 20px; position: relative; z-index: 1; pointer-events: none;
+}
+.signature {
+  font-family: 'Dancing Script', cursive; font-weight: 700;
+  font-size: clamp(42px, 13vw, 56px); color: #1a1208;
+  line-height: 1.05; margin-bottom: 20px; text-align: center;
+  text-shadow: 1px 2px 4px rgba(255,255,255,0.2);
+}
+.front-divider {
+  width: 55%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(26,18,8,0.4), transparent);
+  margin: 0 auto 18px;
+}
+.title-text {
+  font-size: clamp(11px, 3vw, 13px); font-weight: 700;
+  letter-spacing: 5px; color: #2a1a08; text-transform: uppercase; text-align: center;
+}
+
+/* BACK */
+.back-main {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: space-between;
+  padding: 22px 22px 14px; position: relative; z-index: 1;
+}
+.back-top { text-align: center; width: 100%; }
+.monogram {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(52px, 14vw, 64px); font-weight: 700;
+  letter-spacing: 8px; line-height: 1; color: #0a0602; margin-bottom: 2px;
+}
+a {
+  display: block; text-decoration: none;
+  touch-action: manipulation; cursor: pointer;
+  position: relative; z-index: 10;
+  -webkit-tap-highlight-color: rgba(26,18,8,0.1);
+}
+.vcard-label {
+  font-size: clamp(8.5px, 2.3vw, 10px); font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(10,6,2,0.7); padding: 2px 0;
+  display: block;
+}
+
+.back-mid { text-align: center; width: 100%; }
+.social-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 20px; margin-bottom: 10px;
+}
+.icon-btn {
+  width: 46px; height: 46px; border-radius: 10px;
+  border: 2px solid rgba(10,6,2,0.4); background: rgba(10,6,2,0.08);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.qr-wrap {
+  display: inline-flex; flex-direction: column;
+  align-items: center; gap: 5px; padding: 4px; margin-top: 6px;
+}
+.qr-box {
+  width: clamp(88px, 24vw, 104px); height: clamp(88px, 24vw, 104px);
+  background: #0a0602; border-radius: 9px; padding: 7px;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.hint {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  color: rgba(10,6,2,0.55); text-transform: uppercase;
+  display: block; pointer-events: none;
+}
+
+.back-bottom { text-align: center; width: 100%; }
+.divider {
+  width: 40%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(10,6,2,0.35), transparent);
+  margin: 0 auto 10px; pointer-events: none;
+}
+.phone-btn {
+  display: flex; align-items: center; justify-content: center;
+  gap: 9px; padding: 10px 20px; border-radius: 40px;
+  border: 2px solid rgba(10,6,2,0.35); background: rgba(10,6,2,0.08);
+  margin-bottom: 4px;
+}
+.phone-label {
+  font-size: clamp(12px, 3.2vw, 14px); font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: #0a0602; pointer-events: none;
+}
+.email-link {
+  font-size: clamp(9.5px, 2.6vw, 11.5px); font-weight: 700;
+  letter-spacing: 0.5px; color: rgba(10,6,2,0.85); padding: 4px 0;
+}
+</style>
+</head>
+<body>
+
+<div class="scene" id="card">
+
+<!-- VORDERSEITE -->
+<div class="face front">
+  <div class="front-main">
+    <div style="text-align:center">
+      <div class="signature">Thomas Fiebig</div>
+      <div class="front-divider"></div>
+      <div class="title-text">Edelmetallfachberater</div>
+    </div>
+  </div>
+  <button class="flip-bar" onclick="flipCard()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+      <path d="M4 12C4 7.58 7.58 4 12 4C14.35 4 16.48 4.99 18 6.62V4h2v6h-6V8h3.18C16.07 6.76 14.13 6 12 6C8.69 6 6 8.69 6 12H4Z" fill="rgba(10,6,2,0.5)"/>
+      <path d="M20 12C20 16.42 16.42 20 12 20C9.65 20 7.52 19.01 6 17.38V20H4v-6h6v2H6.82C7.93 17.24 9.87 18 12 18C15.31 18 18 15.31 18 12H20Z" fill="rgba(10,6,2,0.5)"/>
+    </svg>
+    <span>Karte drehen</span>
+  </button>
+</div>
+
+<!-- RÜCKSEITE -->
+<div class="face back">
+  <div class="back-main">
+
+    <div class="back-top">
+      <a href="#" onclick="downloadVCard(); return false;" style="display:inline-block; text-decoration:none;">
+        <div class="monogram">TF</div>
+        <span class="vcard-label">Zu Kontakten hinzufügen</span>
+      </a>
+    </div>
+
+    <div class="back-mid">
+      <div class="social-row">
+        <a href="tel:+4916096432246" class="icon-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.61 21 3 13.39 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.26.2 2.47.57 3.58.11.35.03.74-.24 1.02L6.6 10.8z" fill="#0a0602"/>
+          </svg>
+        </a>
+        <a href="mailto:beratung@fiebig-edelmetallfachberater.com" class="icon-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="4" width="20" height="16" rx="3" stroke="#0a0602" stroke-width="1.8" fill="none"/>
+            <path d="M2 7l10 7 10-7" stroke="#0a0602" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=61584058441422" target="_blank" rel="noopener noreferrer" class="icon-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10.5" stroke="#0a0602" stroke-width="1.8"/>
+            <path d="M13.5 8.5H15V6.5H13C11.6 6.5 10.5 7.6 10.5 9V10.5H9V12.5H10.5V17.5H12.5V12.5H14L14.5 10.5H12.5V9C12.5 8.72 12.72 8.5 13 8.5H13.5Z" fill="#0a0602"/>
+          </svg>
+        </a>
+        <a href="https://www.instagram.com/fiebig_edelmetallfachberater/" target="_blank" rel="noopener noreferrer" class="icon-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="#0a0602" stroke-width="1.8"/>
+            <circle cx="12" cy="12" r="4.2" stroke="#0a0602" stroke-width="1.8"/>
+            <circle cx="17.6" cy="6.4" r="1.4" fill="#0a0602"/>
+          </svg>
+        </a>
+      </div>
+
+      <a href="https://fiebig-edelmetallfachberater.com" target="_blank" rel="noopener noreferrer" class="qr-wrap">
+        <div class="qr-box">
+          <svg viewBox="0 0 37 37" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="9" height="9" fill="#f5e888" rx="1.2"/>
+            <rect x="2.2" y="2.2" width="6.6" height="6.6" fill="#0a0602" rx="0.6"/>
+            <rect x="3.4" y="3.4" width="4.2" height="4.2" fill="#f5e888" rx="0.5"/>
+            <rect x="27" y="1" width="9" height="9" fill="#f5e888" rx="1.2"/>
+            <rect x="28.2" y="2.2" width="6.6" height="6.6" fill="#0a0602" rx="0.6"/>
+            <rect x="29.4" y="3.4" width="4.2" height="4.2" fill="#f5e888" rx="0.5"/>
+            <rect x="1" y="27" width="9" height="9" fill="#f5e888" rx="1.2"/>
+            <rect x="2.2" y="28.2" width="6.6" height="6.6" fill="#0a0602" rx="0.6"/>
+            <rect x="3.4" y="29.4" width="4.2" height="4.2" fill="#f5e888" rx="0.5"/>
+            <rect x="12" y="1" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="15" y="1" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="18" y="1" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="21" y="1" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="24" y="1" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="12" y="4" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="18" y="4" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="24" y="4" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="13" y="7" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="16" y="7" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="20" y="7" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="23" y="7" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="1" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="4" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="7" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="11" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="14" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="17" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="20" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="23" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="26" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="29" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="32" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="35" y="12" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="2" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="6" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="10" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="14" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="18" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="22" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="26" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="30" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="34" y="15" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="1" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="5" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="9" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="13" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="17" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="21" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="25" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="29" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="33" y="18" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="3" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="7" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="11" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="15" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="19" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="23" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="27" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="31" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="35" y="21" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="12" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="15" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="19" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="23" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="27" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="31" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="35" y="27" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="12" y="30" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="16" y="30" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="20" y="30" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="24" y="30" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="28" y="30" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="32" y="30" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="13" y="33" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="17" y="33" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="21" y="33" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="25" y="33" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="29" y="33" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="33" y="33" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="12" y="36" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="15" y="36" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="19" y="36" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="23" y="36" width="2" height="2" fill="#f5e888" rx="0.3"/>
+            <rect x="27" y="36" width="2" height="2" fill="#f5e888" rx="0.3"/><rect x="31" y="36" width="2" height="2" fill="#f5e888" rx="0.3"/>
+          </svg>
+        </div>
+        <span class="hint">Buttons antippen</span>
+      </a>
+    </div>
+
+    <div class="back-bottom">
+      <div class="divider"></div>
+      <a href="tel:+4916096432246" class="phone-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="pointer-events:none;flex-shrink:0">
+          <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.61 21 3 13.39 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.26.2 2.47.57 3.58.11.35.03.74-.24 1.02L6.6 10.8z" fill="#0a0602"/>
+        </svg>
+        <span class="phone-label">Anrufen</span>
+      </a>
+      <span class="hint" style="margin-bottom:6px">Antippen zum Anrufen</span>
+      <a href="mailto:beratung@fiebig-edelmetallfachberater.com" class="email-link">
+        beratung@fiebig-edelmetallfachberater.com
+      </a>
+    </div>
+
+  </div>
+  <button class="flip-bar" onclick="flipCard()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+      <path d="M4 12C4 7.58 7.58 4 12 4C14.35 4 16.48 4.99 18 6.62V4h2v6h-6V8h3.18C16.07 6.76 14.13 6 12 6C8.69 6 6 8.69 6 12H4Z" fill="rgba(10,6,2,0.5)"/>
+      <path d="M20 12C20 16.42 16.42 20 12 20C9.65 20 7.52 19.01 6 17.38V20H4v-6h6v2H6.82C7.93 17.24 9.87 18 12 18C15.31 18 18 15.31 18 12H20Z" fill="rgba(10,6,2,0.5)"/>
+    </svg>
+    <span>Zurück drehen</span>
+  </button>
+</div>
+
+</div>
+
+<script>
+function flipCard() {
+  document.getElementById('card').classList.toggle('flipped');
+}
+
+function downloadVCard() {
+  var photo = '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';
+
+  var vcardData = [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    'N:Fiebig;Thomas;;;',
+    'FN:Thomas Fiebig',
+    'TITLE:Zertifizierter Edelmetallfachberater',
+    'TEL;TYPE=CELL:+4916096432246',
+    'EMAIL:beratung@fiebig-edelmetallfachberater.com',
+    'URL:https://fiebig-edelmetallfachberater.com',
+    'X-SOCIALPROFILE;TYPE=facebook:https://www.facebook.com/profile.php?id=61584058441422',
+    'X-SOCIALPROFILE;TYPE=instagram:https://www.instagram.com/fiebig_edelmetallfachberater/',
+    'PHOTO;ENCODING=b;TYPE=JPEG:' + photo,
+    'END:VCARD'
+  ].join('\r\n');
+
+  var blob = new Blob([vcardData], { type: 'text/vcard;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'Thomas_Fiebig.vcf';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>
